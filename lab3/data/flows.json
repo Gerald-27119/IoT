@@ -1,0 +1,633 @@
+[
+    {
+        "id": "cae45d3d0da42adb",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8aa79cec501d588c",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.mqttdashboard.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "11e4cd185e8d9b5f",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": false
+    },
+    {
+        "id": "b45916e8404023c3",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "5bca5adaee2428fe",
+        "type": "ui-page",
+        "name": "Page 1",
+        "ui": "11e4cd185e8d9b5f",
+        "path": "/page1",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "b45916e8404023c3",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "466e60f0b740e856",
+        "type": "ui-group",
+        "name": "Czujnik temp i wilg",
+        "page": "5bca5adaee2428fe",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "455636b8d7da3a26",
+        "type": "ui-group",
+        "name": "Czujnik dystansu",
+        "page": "5bca5adaee2428fe",
+        "width": 6,
+        "height": 1,
+        "order": -1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "d4ea783df96e98cc",
+        "type": "mqtt in",
+        "z": "cae45d3d0da42adb",
+        "name": "",
+        "topic": "adam/wokwi/dht22",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "8aa79cec501d588c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 40,
+        "wires": [
+            [
+                "61f5408834a1cd98"
+            ]
+        ]
+    },
+    {
+        "id": "87483685827ccbce",
+        "type": "mqtt in",
+        "z": "cae45d3d0da42adb",
+        "name": "",
+        "topic": "adam/wokwi/distance",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "8aa79cec501d588c",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 440,
+        "y": 40,
+        "wires": [
+            [
+                "04a5e31fddfdd24b"
+            ]
+        ]
+    },
+    {
+        "id": "61f5408834a1cd98",
+        "type": "json",
+        "z": "cae45d3d0da42adb",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "e930c1e11cf86e50"
+            ]
+        ]
+    },
+    {
+        "id": "e930c1e11cf86e50",
+        "type": "function",
+        "z": "cae45d3d0da42adb",
+        "name": "Extract DHT22 values",
+        "func": "let data = msg.payload;\n\nif (typeof data === \"string\") {\n    data = JSON.parse(data);\n}\n\nconst temperature = data.temperature ?? data.temp;\nconst humidity = data.humidity;\n\nconst temperatureMsg = {\n    payload: Number(temperature),\n    topic: \"Temperatura\"\n};\n\nconst humidityMsg = {\n    payload: Number(humidity),\n    topic: \"Wilgotność\"\n};\n\nreturn [temperatureMsg, humidityMsg];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 180,
+        "y": 160,
+        "wires": [
+            [
+                "6bb1e2edee68e632"
+            ],
+            [
+                "25f7f588b90421ab"
+            ]
+        ]
+    },
+    {
+        "id": "6bb1e2edee68e632",
+        "type": "ui-gauge",
+        "z": "cae45d3d0da42adb",
+        "name": "Temperatura",
+        "group": "466e60f0b740e856",
+        "order": 2,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Temperatura",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "Celcius",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "-40",
+                "color": "#35e9d4",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "-20",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "0",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "10",
+                "color": "#31d845",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "25",
+                "color": "#7aff90",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "50",
+                "color": "#232923",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": "-40",
+        "max": "50",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 90,
+        "y": 220,
+        "wires": [
+            [
+                "1879a72cbf20d8cd"
+            ]
+        ]
+    },
+    {
+        "id": "1879a72cbf20d8cd",
+        "type": "ui-chart",
+        "z": "cae45d3d0da42adb",
+        "group": "466e60f0b740e856",
+        "name": "Temp in time",
+        "label": "Wykres temperatury w czasie",
+        "order": 9007199254740991,
+        "chartType": "line",
+        "category": "",
+        "categoryType": "none",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "-40",
+        "ymax": "50",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "false",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 8,
+        "className": "",
+        "interpolation": "smooth",
+        "x": 70,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "095eb903aab76d6f",
+        "type": "ui-chart",
+        "z": "cae45d3d0da42adb",
+        "group": "466e60f0b740e856",
+        "name": "Hum in time",
+        "label": "Wykres wilgotnosci w czasie",
+        "order": 9007199254740991,
+        "chartType": "line",
+        "category": "",
+        "categoryType": "none",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 8,
+        "className": "",
+        "interpolation": "linear",
+        "x": 230,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "04a5e31fddfdd24b",
+        "type": "json",
+        "z": "cae45d3d0da42adb",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 450,
+        "y": 100,
+        "wires": [
+            [
+                "24b37a9247161702"
+            ]
+        ]
+    },
+    {
+        "id": "24b37a9247161702",
+        "type": "function",
+        "z": "cae45d3d0da42adb",
+        "name": "function 2",
+        "func": "let data = msg.payload;\n\nif (typeof data === \"string\") {\n    data = JSON.parse(data);\n}\n\nconst distance = data.distanceCm ?? data.distance ?? data.cm;\n\nif (distance === undefined || distance === null || isNaN(Number(distance))) {\n    node.warn({\n        error: \"Invalid distance value\",\n        receivedPayload: data\n    });\n    return null;\n}\n\nmsg.payload = Number(distance);\nmsg.topic = \"Odległość\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 160,
+        "wires": [
+            [
+                "bf5049e9d6721bd5"
+            ]
+        ]
+    },
+    {
+        "id": "bf5049e9d6721bd5",
+        "type": "ui-gauge",
+        "z": "cae45d3d0da42adb",
+        "name": "distance",
+        "group": "455636b8d7da3a26",
+        "order": "0",
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "gauge",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "cm",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "200",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "400",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": "400",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 460,
+        "y": 220,
+        "wires": [
+            [
+                "2a6dd62554602c6e"
+            ]
+        ]
+    },
+    {
+        "id": "2a6dd62554602c6e",
+        "type": "ui-chart",
+        "z": "cae45d3d0da42adb",
+        "group": "455636b8d7da3a26",
+        "name": "Dist in time",
+        "label": "Wykres dystansu w czasie",
+        "order": 9007199254740991,
+        "chartType": "line",
+        "category": "",
+        "categoryType": "none",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 8,
+        "className": "",
+        "interpolation": "linear",
+        "x": 470,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "25f7f588b90421ab",
+        "type": "ui-gauge",
+        "z": "cae45d3d0da42adb",
+        "name": "Wilgotność",
+        "group": "466e60f0b740e856",
+        "order": 1,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Wilgotność",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "%",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "50",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "100",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": "100",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 270,
+        "y": 220,
+        "wires": [
+            [
+                "095eb903aab76d6f"
+            ]
+        ]
+    }
+]

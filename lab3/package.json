@@ -1,0 +1,12 @@
+{
+  "name": "node-red-iot",
+  "version": "1.0.0",
+  "description": "Node-RED IoT project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node-red -u ./data"
+  },
+  "dependencies": {
+    "node-red": "^4.0.0"
+  }
+}

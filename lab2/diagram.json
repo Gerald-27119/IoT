@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "author": "Uri Shaked",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-breadboard", "id": "bb1", "top": 73.8, "left": -966.8, "attrs": {} },
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 19.2, "left": 24.04, "attrs": {} },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": -162.9,
+      "left": -159,
+      "attrs": { "temperature": "48.7", "humidity": "56" }
+    },
+    { "type": "wokwi-hc-sr04", "id": "ultrasonic1", "top": -152.1, "left": -474.5, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "dht1:SDA", "esp:15", "green", [ "v0" ] ],
+    [ "esp:3V3", "bb1:tp.50", "red", [ "h0" ] ],
+    [ "dht1:VCC", "bb1:tp.48", "red", [ "v0" ] ],
+    [ "esp:GND.1", "bb1:tn.50", "black", [ "h0" ] ],
+    [ "dht1:GND", "bb1:tn.48", "black", [ "v0" ] ],
+    [ "ultrasonic1:VCC", "bb1:tp.46", "red", [ "v143.7" ] ],
+    [ "ultrasonic1:GND", "bb1:tn.47", "black", [ "v57.6", "h-20.4", "v96.1" ] ],
+    [ "ultrasonic1:TRIG", "esp:25", "cyan", [ "v0" ] ],
+    [ "esp:26", "ultrasonic1:ECHO", "green", [ "h0" ] ]
+  ],
+  "dependencies": {}
+}
